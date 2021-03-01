@@ -21,7 +21,7 @@ export const addTodo = async (req: Request, res: Response): Promise<void> => {
 	if (!body.title || !body.status) {
 		res.status(401).json({
 			status: 401,
-			errorMessage: `ValidationError: Todo Validation failed:title:${body.title},status:${body.status}`
+			errorMessage: `ValidationError: Todo Validation failed: title: ${body.title}, status: ${body.status}`
 		});
 		return
 	}
@@ -31,18 +31,19 @@ export const addTodo = async (req: Request, res: Response): Promise<void> => {
 		status: body.status
 	});
 	const newTodo = await newTodoModel.save();
-	const updatedAllTodosAfterSave = await TodoModel.find()
+	const todosAfterSave = await TodoModel.find()
 
 	res.status(201).json({
 		message: 'Todo successfully added!',
 		addedTodo: newTodo,
-		allTodosAfterAddition: updatedAllTodosAfterSave
+		allTodosAfterAddition: todosAfterSave
 	});
 }
 
 export const updateTodo = async (req: Request, res: Response): Promise<void> => {
 	const {
-		params: { id }, body
+		params: { id },
+		body
 	} = req;
 
 	// if all or one of the required req is undefined
@@ -55,7 +56,7 @@ export const updateTodo = async (req: Request, res: Response): Promise<void> => 
 	}
 
 	const updatedTodo = await TodoModel.findByIdAndUpdate({ _id: id }, body);
-	const updatedAllTodosAfterUpdate = await TodoModel.find();
+	const todosAfterUpdate = await TodoModel.find();
 
 	if (!updatedTodo) {
 		res.status(501).json({ status: 501, errorMessage: 'Edit todo failed. Not implemented' });
@@ -65,7 +66,37 @@ export const updateTodo = async (req: Request, res: Response): Promise<void> => 
 	res.status(200).json({
 		message: 'Todo successfully updated',
 		updatedTodo,
-		todos: updatedAllTodosAfterUpdate
+		todos: todosAfterUpdate
+	});
+
+}
+
+export const removeTodo = async (req: Request, res: Response): Promise<void> => {
+	const { params: { id } } = req;
+
+	if (!id) {
+		res.status(401).json({
+			status: 401,
+			errorMessage: 'ValidationError: Params _id is not defined.'
+		});
+		return
+	}
+
+	const removedTodo = await TodoModel.findByIdAndRemove(id);
+	const todosAfterRemove = await TodoModel.find();
+
+	if (!removeTodo) {
+		res.status(501).json({
+			status: 501,
+			errorMessage: 'Remove todo failed, Not implemented.'
+		});
+		return
+	}
+
+	res.status(200).json({
+		message: 'Todo successfully removed',
+		removedTodo,
+		todos: todosAfterRemove
 	});
 
 }
