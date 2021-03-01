@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import routes from './routes';
 
 
 const app = express();
@@ -16,10 +17,11 @@ const options = { useNewUrlParser: true, useUnifiedTopology: true };
 
 
 app.use(cors());
+app.use(routes)
 
-app.get('/', (req: Request, res: Response) => res.send('Berhasil'));
-
-app.get('/about', (req: Request, res: Response) => res.send('About API'));
+app.get('/', (req: Request, res: Response) => {
+	res.send('Hello, Tes!');
+});
 
 mongoose.set('useFindAndModify', true);
 mongoose.connect(uri, options)

@@ -7,15 +7,15 @@ import {
 	addTodo,
 	updateTodo,
 	removeTodo
-} from "../controllers/todos/index";
+} from '../controllers/todos';
 
 const router = Router();
 const jsonParser = bodyParser.json();
 
-router.get('api/todos', getTodos);
-router.get('api/todo/:id', getTodo);
-router.post('api/add-todo', jsonParser, addTodo);
-router.put('api/update-todo/:id', jsonParser, updateTodo);
-router.delete('api/remove-todo/:id', jsonParser, removeTodo);
+router.get('/api/todos', getTodos);
+router.get('/api/todo/:id', getTodo);
+router.post('/api/add-todo', jsonParser, addTodo);
+router.put('/api/update-todo/:id', jsonParser, updateTodo);
+router.delete('/api/remove-todo/:id', jsonParser, removeTodo);
 
 export default router;

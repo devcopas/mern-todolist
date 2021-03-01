@@ -47,7 +47,7 @@ export const updateTodo = async (req: Request, res: Response): Promise<void> => 
 	} = req;
 
 	// if all or one of the required req is undefined
-	if (!body.title || !body.statys || !id) {
+	if (!body.title || !body.status || !id) {
 		res.status(401).json({
 			status: 401,
 			errorMessages: `ValidationError: _id ${id} or required body properties is not defined`
