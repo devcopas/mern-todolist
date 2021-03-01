@@ -15,7 +15,7 @@ export const getTodo = async (req: Request, res: Response) => {
 	})
 }
 
-export const addTodo = async (req: Request, res: Response) => {
+export const addTodo = async (req: Request, res: Response): Promise<void> => {
 	const body: Pick<Todo, 'title' | 'status'> = req.body;
 
 	if (!body.title || !body.status) {
@@ -38,4 +38,34 @@ export const addTodo = async (req: Request, res: Response) => {
 		addedTodo: newTodo,
 		allTodosAfterAddition: updatedAllTodosAfterSave
 	});
+}
+
+export const updateTodo = async (req: Request, res: Response): Promise<void> => {
+	const {
+		params: { id }, body
+	} = req;
+
+	// if all or one of the required req is undefined
+	if (!body.title || !body.statys || !id) {
+		res.status(401).json({
+			status: 401,
+			errorMessages: `ValidationError: _id ${id} or required body properties is not defined`
+		});
+		return
+	}
+
+	const updatedTodo = await TodoModel.findByIdAndUpdate({ _id: id }, body);
+	const updatedAllTodosAfterUpdate = await TodoModel.find();
+
+	if (!updatedTodo) {
+		res.status(501).json({ status: 501, errorMessage: 'Edit todo failed. Not implemented' });
+		return;
+	}
+
+	res.status(200).json({
+		message: 'Todo successfully updated',
+		updatedTodo,
+		todos: updatedAllTodosAfterUpdate
+	});
+
 }
